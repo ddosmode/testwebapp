@@ -1,34 +1,59 @@
+from collections.abc import Callable
+from types import TracebackType
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.infrastructure.database.session import SessionFactory
+from app.infrastructure.database.repositories import (
+    CategoryRepository,
+    CityRepository,
+    InventoryRepository,
+    OrderRepository,
+    PaymentMethodRepository,
+    ProductRepository,
+    SettingsRepository,
+    UserRepository,
+)
 
 
 class SqlAlchemyUnitOfWork:
-    def __init__(self) -> None:
+    def __init__(self, session_factory: Callable[[], AsyncSession]) -> None:
+        self._session_factory = session_factory
         self.session: AsyncSession | None = None
 
     async def __aenter__(self) -> "SqlAlchemyUnitOfWork":
-        self.session = SessionFactory()
+        self.session = self._session_factory()
+
+        self.categories = CategoryRepository(self.session)
+        self.products = ProductRepository(self.session)
+        self.inventory = InventoryRepository(self.session)
+        self.cities = CityRepository(self.session)
+        self.orders = OrderRepository(self.session)
+        self.payment_methods = PaymentMethodRepository(self.session)
+        self.settings = SettingsRepository(self.session)
+        self.users = UserRepository(self.session)
+
         return self
 
-    async def __aexit__(self, exc_type, exc, tb) -> None:
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
         if self.session is None:
             return
 
         if exc_type is not None:
-            await self.session.rollback()
+            await self.rollback()
 
         await self.session.close()
-        self.session = None
 
     async def commit(self) -> None:
         if self.session is None:
             raise RuntimeError("UnitOfWork is not active")
-
         await self.session.commit()
 
     async def rollback(self) -> None:
         if self.session is None:
-            raise RuntimeError("UnitOfWork is not active")
-
+            return
         await self.session.rollback()

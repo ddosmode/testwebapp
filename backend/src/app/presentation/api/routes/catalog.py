@@ -25,6 +25,7 @@ async def list_products() -> list[dict[str, object]]:
             "name": product.name,
             "description": product.description,
             "price": str(product.price),
+            "currency": product.currency,
             "is_active": product.is_active,
         }
         for product in products
@@ -48,6 +49,7 @@ async def get_product(product_id: UUID) -> dict[str, object]:
         "name": product.name,
         "description": product.description,
         "price": str(product.price),
+        "currency": product.currency,
         "is_active": product.is_active,
     }
 
@@ -55,12 +57,13 @@ async def get_product(product_id: UUID) -> dict[str, object]:
 @router.get("/categories")
 async def list_categories() -> list[dict[str, object]]:
     async with SqlAlchemyUnitOfWork(SessionFactory) as uow:
-        categories = await uow.categories.list()
+        categories = await uow.categories.list_active()
 
     return [
         {
             "id": str(category.id),
             "name": category.name,
+            "slug": getattr(category, "slug", ""),
             "is_active": category.is_active,
         }
         for category in categories

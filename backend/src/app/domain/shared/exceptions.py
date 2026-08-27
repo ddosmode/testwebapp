@@ -8,3 +8,12 @@ class EntityNotFoundError(DomainError):
 
 class BusinessRuleViolation(DomainError):
     """Domain business rule was violated."""
+
+
+class TelegramInitDataError(DomainError):
+    """Telegram WebApp initData is invalid or expired."""
+
+
+class TelegramAuthError(DomainError):
+    """Telegram authentication failed."""
+""

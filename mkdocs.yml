@@ -1,0 +1,84 @@
+# Project information
+site_name: Документация TestWebApp
+site_description: Подробное руководство по установке и пониманию платформы Legal Commerce на базе DDD, FastAPI, React, Docker и других технологий.
+site_author: Команда TestWebApp
+docs_dir: docs
+site_dir: public_docs
+
+# Repository
+repo_name: testwebapp-cf1f9e2fe875
+repo_url: https://github.com/testwebapp-cf1f9e2fe875
+edit_uri: ""
+
+# Copyright
+copyright: Copyright &copy; 2026 Команда TestWebApp
+
+# Configuration
+theme:
+  name: material
+  language: ru
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+  font:
+    text: Open Sans
+    code: Jetbrains Mono
+
+  features:
+    - content.code.copy
+    - content.code.select
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      use_pygments: true
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+  - meta
+  - attr_list
+  - toc:
+      permalink: true
+
+nav:
+  - 'Обзор': index.md
+  - 'Настройка и запуск приложения':
+    - '1. Конфигурация': configuration.md
+    - '2. Инициализация зависимостей': dependencies-initialization.md
+    - '3.1 Локальный деплой': development-environment.md
+    - '3.2 Продакшен деплой': production-environment.md
+    - '4. Запуск приложения': running.md
+  - 'Архитектура проекта':
+    - 'Обзор архитектуры': architecture.md
+    - 'Backend API': backend.md
+    - 'Frontend Development': frontend.md
+    - 'База данных': database.md
+    - 'Docker': docker.md
+  - 'Деплой': deployment.md
+plugins:
+  - search:
+      lang:
+        - ru

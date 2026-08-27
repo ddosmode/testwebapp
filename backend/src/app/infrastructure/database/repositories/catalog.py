@@ -8,11 +8,11 @@ class CategoryRepository(SQLAlchemyRepository[CategoryModel]):
     def __init__(self, session):
         super().__init__(session, CategoryModel)
 
-    async def list_active(self) -> list[ProductModel]:
+    async def list_active(self) -> list[CategoryModel]:
         result = await self.session.execute(
-            select(ProductModel)
-            .where(ProductModel.is_active.is_(True))
-            .order_by(ProductModel.name)
+            select(CategoryModel)
+            .where(CategoryModel.is_active.is_(True))
+            .order_by(CategoryModel.name)
         )
         return list(result.scalars().all())
 

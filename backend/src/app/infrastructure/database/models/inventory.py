@@ -1,6 +1,6 @@
 from uuid import UUID, uuid4
 
-from sqlalchemy import Boolean, ForeignKey
+from sqlalchemy import Boolean, Float, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.infrastructure.database.base import Base
@@ -15,4 +15,11 @@ class InventoryUnitModel(Base):
         nullable=False,
         index=True,
     )
+    city_id: Mapped[UUID] = mapped_column(
+        ForeignKey("cities.id"),
+        nullable=False,
+        index=True,
+    )
+    latitude: Mapped[float] = mapped_column(Float, nullable=True)
+    longitude: Mapped[float] = mapped_column(Float, nullable=True)
     is_available: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)

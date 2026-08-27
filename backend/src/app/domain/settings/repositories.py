@@ -9,6 +9,10 @@ class SettingsRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    async def get_by_key(self, key: str) -> Setting | None:
+        raise NotImplementedError
+
+    @abstractmethod
     async def set(self, setting: Setting) -> None:
         raise NotImplementedError
 

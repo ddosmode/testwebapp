@@ -17,6 +17,16 @@ class OrderRepository(ABC):
     async def add(self, order: Order) -> None:
         raise NotImplementedError
 
+
+class OrderItemRepository(ABC):
     @abstractmethod
-    async def add_item(self, item: OrderItem) -> None:
+    async def get(self, item_id: UUID) -> OrderItem | None:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def list_by_order(self, order_id: UUID) -> list[OrderItem]:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def add(self, item: OrderItem) -> None:
         raise NotImplementedError

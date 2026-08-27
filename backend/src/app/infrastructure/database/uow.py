@@ -7,8 +7,11 @@ from app.infrastructure.database.repositories import (
     CategoryRepository,
     CityRepository,
     InventoryRepository,
+    LocationRepository,
+    OrderItemRepository,
     OrderRepository,
     PaymentMethodRepository,
+    PaymentRepository,
     ProductRepository,
     SettingsRepository,
     UserRepository,
@@ -27,8 +30,11 @@ class SqlAlchemyUnitOfWork:
         self.products = ProductRepository(self.session)
         self.inventory = InventoryRepository(self.session)
         self.cities = CityRepository(self.session)
+        self.locations = LocationRepository(self.session)
         self.orders = OrderRepository(self.session)
+        self.order_items = OrderItemRepository(self.session)
         self.payment_methods = PaymentMethodRepository(self.session)
+        self.payments = PaymentRepository(self.session)
         self.settings = SettingsRepository(self.session)
         self.users = UserRepository(self.session)
 

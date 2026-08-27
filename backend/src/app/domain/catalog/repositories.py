@@ -14,6 +14,10 @@ class CategoryRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    async def get_by_slug(self, slug: str) -> Category | None:
+        raise NotImplementedError
+
+    @abstractmethod
     async def add(self, category: Category) -> None:
         raise NotImplementedError
 
@@ -29,6 +33,10 @@ class ProductRepository(ABC):
 
     @abstractmethod
     async def list_active(self) -> list[Product]:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_by_slug(self, slug: str) -> Product | None:
         raise NotImplementedError
 
     @abstractmethod

@@ -1,5 +1,9 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
+from app.infrastructure.database import Base
+from app.infrastructure.database.session import engine
 from app.presentation.api.routes import (
     auth_router,
     cart_router,
@@ -13,10 +17,18 @@ from app.presentation.api.routes import (
 )
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+
+
 def create_app() -> FastAPI:
     application = FastAPI(
         title="TestWebApp API",
         version="1.0.0",
+        lifespan=lifespan,
     )
 
     application.include_router(health_router)

@@ -1,9 +1,8 @@
 import pytest
 from sqlalchemy import text
-from app.infrastructure.database.session import SessionFactory
 
 from app.infrastructure.database import Base
-from app.infrastructure.database.session import engine
+from app.infrastructure.database.session import SessionFactory, engine
 from app.infrastructure.database.uow import SqlAlchemyUnitOfWork
 
 
@@ -49,7 +48,6 @@ async def test_unit_of_work():
 
 @pytest.mark.asyncio
 async def test_category_crud() -> None:
-    from uuid import uuid4
     from app.infrastructure.database.models import CategoryModel
 
     async with SessionFactory() as session:
@@ -79,6 +77,7 @@ async def test_category_crud() -> None:
 @pytest.mark.asyncio
 async def test_product_crud() -> None:
     from decimal import Decimal
+
     from app.infrastructure.database.models import CategoryModel, ProductModel
 
     async with SessionFactory() as session:
@@ -150,9 +149,9 @@ async def test_user_crud() -> None:
 
 @pytest.mark.asyncio
 async def test_inventory_crud() -> None:
-    from uuid import uuid4
     from decimal import Decimal
-    from app.infrastructure.database.models import CategoryModel, ProductModel, InventoryUnitModel, CityModel
+
+    from app.infrastructure.database.models import CategoryModel, CityModel, InventoryUnitModel, ProductModel
 
     async with SessionFactory() as session:
         city = CityModel(name="Berlin", is_active=True)
@@ -224,9 +223,9 @@ async def test_setting_crud() -> None:
 
 @pytest.mark.asyncio
 async def test_order_crud() -> None:
-    from uuid import uuid4
     from decimal import Decimal
-    from app.infrastructure.database.models import UserModel, OrderModel
+
+    from app.infrastructure.database.models import OrderModel, UserModel
 
     async with SessionFactory() as session:
         user = UserModel(

@@ -8,9 +8,14 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
       react: path.resolve(__dirname, "./node_modules/react"),
+      "react/jsx-runtime": path.resolve(__dirname, "./node_modules/react/jsx-runtime"),
+      "react/jsx-dev-runtime": path.resolve(__dirname, "./node_modules/react/jsx-dev-runtime"),
       "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
       "react-dom/client": path.resolve(__dirname, "./node_modules/react-dom/client"),
     },
+  },
+  optimizeDeps: {
+    exclude: ['react', 'react-dom', '@testing-library/react'],
   },
   server: {
     host: '0.0.0.0',
@@ -30,12 +35,8 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test-setup.ts',
-    resolve: {
-      alias: {
-        react: path.resolve(__dirname, "./node_modules/react"),
-        "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
-        "react-dom/client": path.resolve(__dirname, "./node_modules/react-dom/client"),
-      },
+    deps: {
+      inline: ['@testing-library/react', 'react', 'react-dom'],
     },
   },
 });

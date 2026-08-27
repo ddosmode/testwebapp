@@ -18,15 +18,15 @@ import time
 
 import pytest
 
-from app.domain.shared.exceptions import TelegramInitDataError
 from app.infrastructure.telegram.validator import (
     TelegramInitDataError as ValidatorInitDataError,
+)
+from app.infrastructure.telegram.validator import (
     _coerce_types,
     _validate_auth_date,
     parse_init_data,
     verify_init_data,
 )
-
 
 # A realistic but fake bot token for testing.
 # Format: <bot_id>:<bot_secret>

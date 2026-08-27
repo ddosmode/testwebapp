@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 T = TypeVar("T")
 
 
-class SQLAlchemyRepository(Generic[T]):
+class SQLAlchemyRepository[T]:
     def __init__(self, session: AsyncSession, model: type[T]) -> None:
         self.session = session
         self.model = model

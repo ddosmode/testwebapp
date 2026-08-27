@@ -1,8 +1,10 @@
-import pytest
 from decimal import Decimal
-from uuid import uuid4
+from uuid import UUID, uuid4
+
+import pytest
 
 from app.application.catalog.services import CatalogService
+from app.application.common import UnitOfWork
 from app.application.inventory.services import InventoryService
 from app.application.locations.services import LocationService
 from app.application.payments.services import PaymentMethodService
@@ -11,12 +13,11 @@ from app.domain.catalog.entities import Category, Product
 from app.domain.inventory.entities import InventoryUnit
 from app.domain.locations.entities import City, Location
 from app.domain.payments.entities import PaymentMethod
-from app.domain.shared.exceptions import EntityNotFoundError
-from app.domain.shared.value_objects import Coordinates
 from app.domain.settings.entities import Setting
+from app.domain.shared.exceptions import EntityNotFoundError
 
 
-class FakeUnitOfWork:
+class FakeUnitOfWork(UnitOfWork):
     def __init__(self) -> None:
         self.categories = FakeCategoryRepo()
         self.products = FakeProductRepo()
@@ -41,9 +42,9 @@ class FakeUnitOfWork:
 
 class FakeCategoryRepo:
     def __init__(self) -> None:
-        self._items: dict[uuid4, Category] = {}
+        self._items: dict[UUID, Category] = {}
 
-    async def get(self, category_id: uuid4) -> Category | None:
+    async def get(self, category_id: UUID) -> Category | None:
         return self._items.get(category_id)
 
     async def list_active(self) -> list[Category]:
@@ -52,15 +53,15 @@ class FakeCategoryRepo:
     async def add(self, category: Category) -> None:
         self._items[category.id] = category
 
-    async def remove(self, category_id: uuid4) -> None:
+    async def remove(self, category_id: UUID) -> None:
         self._items.pop(category_id, None)
 
 
 class FakeProductRepo:
     def __init__(self) -> None:
-        self._items: dict[uuid4, Product] = {}
+        self._items: dict[UUID, Product] = {}
 
-    async def get(self, product_id: uuid4) -> Product | None:
+    async def get(self, product_id: UUID) -> Product | None:
         return self._items.get(product_id)
 
     async def list_active(self) -> list[Product]:
@@ -69,32 +70,32 @@ class FakeProductRepo:
     async def add(self, product: Product) -> None:
         self._items[product.id] = product
 
-    async def remove(self, product_id: uuid4) -> None:
+    async def remove(self, product_id: UUID) -> None:
         self._items.pop(product_id, None)
 
 
 class FakeInventoryRepo:
     def __init__(self) -> None:
-        self._items: dict[uuid4, InventoryUnit] = {}
+        self._items: dict[UUID, InventoryUnit] = {}
 
-    async def get(self, unit_id: uuid4) -> InventoryUnit | None:
+    async def get(self, unit_id: UUID) -> InventoryUnit | None:
         return self._items.get(unit_id)
 
-    async def list_available(self, product_id: uuid4) -> list[InventoryUnit]:
+    async def list_available(self, product_id: UUID) -> list[InventoryUnit]:
         return [u for u in self._items.values() if u.product_id == product_id and u.is_available]
 
     async def add(self, unit: InventoryUnit) -> None:
         self._items[unit.id] = unit
 
-    async def remove(self, unit_id: uuid4) -> None:
+    async def remove(self, unit_id: UUID) -> None:
         self._items.pop(unit_id, None)
 
 
 class FakeCityRepo:
     def __init__(self) -> None:
-        self._items: dict[uuid4, City] = {}
+        self._items: dict[UUID, City] = {}
 
-    async def get(self, city_id: uuid4) -> City | None:
+    async def get(self, city_id: UUID) -> City | None:
         return self._items.get(city_id)
 
     async def list_active(self) -> list[City]:
@@ -103,32 +104,32 @@ class FakeCityRepo:
     async def add(self, city: City) -> None:
         self._items[city.id] = city
 
-    async def remove(self, city_id: uuid4) -> None:
+    async def remove(self, city_id: UUID) -> None:
         self._items.pop(city_id, None)
 
 
 class FakeLocationRepo:
     def __init__(self) -> None:
-        self._items: dict[uuid4, Location] = {}
+        self._items: dict[UUID, Location] = {}
 
-    async def get(self, location_id: uuid4) -> Location | None:
+    async def get(self, location_id: UUID) -> Location | None:
         return self._items.get(location_id)
 
-    async def list_by_city(self, city_id: uuid4) -> list[Location]:
-        return [l for l in self._items.values() if l.city_id == city_id]
+    async def list_by_city(self, city_id: UUID) -> list[Location]:
+        return [loc for loc in self._items.values() if loc.city_id == city_id]
 
     async def add(self, location: Location) -> None:
         self._items[location.id] = location
 
-    async def remove(self, location_id: uuid4) -> None:
+    async def remove(self, location_id: UUID) -> None:
         self._items.pop(location_id, None)
 
 
 class FakePaymentRepo:
     def __init__(self) -> None:
-        self._items: dict[uuid4, PaymentMethod] = {}
+        self._items: dict[UUID, PaymentMethod] = {}
 
-    async def get(self, payment_id: uuid4) -> PaymentMethod | None:
+    async def get(self, payment_id: UUID) -> PaymentMethod | None:
         return self._items.get(payment_id)
 
     async def list_active(self) -> list[PaymentMethod]:
@@ -137,7 +138,7 @@ class FakePaymentRepo:
     async def add(self, method: PaymentMethod) -> None:
         self._items[method.id] = method
 
-    async def remove(self, payment_id: uuid4) -> None:
+    async def remove(self, payment_id: UUID) -> None:
         self._items.pop(payment_id, None)
 
 
@@ -145,7 +146,7 @@ class FakeSettingsRepo:
     def __init__(self) -> None:
         self._items: dict[str, Setting] = {}
 
-    async def get(self, setting_id: uuid4) -> Setting | None:
+    async def get(self, setting_id: UUID) -> Setting | None:
         for s in self._items.values():
             if s.id == setting_id:
                 return s
@@ -160,7 +161,7 @@ class FakeSettingsRepo:
     async def set(self, setting: Setting) -> None:
         self._items[setting.key] = setting
 
-    async def remove(self, setting_id: uuid4) -> None:
+    async def remove(self, setting_id: UUID) -> None:
         for key, s in list(self._items.items()):
             if s.id == setting_id:
                 del self._items[key]

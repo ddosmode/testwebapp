@@ -1,8 +1,8 @@
 from uuid import UUID
 
 from app.application.common import UnitOfWork
-from app.domain.users.entities import User
 from app.domain.shared.exceptions import EntityNotFoundError
+from app.domain.users.entities import User
 
 
 class UserService:

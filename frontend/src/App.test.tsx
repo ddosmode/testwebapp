@@ -1,10 +1,23 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import App from '../App'
+import { createRoot } from 'react-dom/client'
+import { act } from 'react-dom/test-utils'
+import App from './App'
 
 describe('App', () => {
   it('renders the heading', () => {
-    render(<App />)
-    expect(screen.getByText('Legal Commerce Platform')).toBeDefined()
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+    const root = createRoot(container)
+
+    act(() => {
+      root.render(<App />)
+    })
+
+    expect(container.textContent).toContain('Legal Commerce Platform')
+
+    act(() => {
+      root.unmount()
+    })
+    document.body.removeChild(container)
   })
 })

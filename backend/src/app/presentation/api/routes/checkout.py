@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, HTTPException
 
 from app.application.orders.services import OrderService
-from app.domain.orders.entities import Order, OrderItem
+from app.domain.orders.entities import Order
 from app.infrastructure.database.session import SessionFactory
 from app.infrastructure.database.uow import SqlAlchemyUnitOfWork
 

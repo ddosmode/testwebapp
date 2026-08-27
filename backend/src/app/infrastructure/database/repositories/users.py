@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from sqlalchemy import select, update
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domain.users.entities import User
 from app.infrastructure.database.models.users import UserModel
@@ -8,7 +9,7 @@ from app.infrastructure.database.repositories.base import SQLAlchemyRepository
 
 
 class UserRepository(SQLAlchemyRepository[UserModel]):
-    def __init__(self, session):
+    def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, UserModel)
 
     async def get_by_telegram_id(self, telegram_id: int) -> UserModel | None:
@@ -17,7 +18,7 @@ class UserRepository(SQLAlchemyRepository[UserModel]):
         )
         return result.scalar_one_or_none()
 
-    async def add(self, user: User) -> UserModel:
+    async def add(self, user: User) -> UserModel:  # type: ignore[override]
         user_model = UserModel(
             id=user.id,
             telegram_id=user.telegram_id,
@@ -34,7 +35,18 @@ class UserRepository(SQLAlchemyRepository[UserModel]):
         await self.session.flush()
         return user_model
 
-    async def update(self, user: UserModel) -> UserModel:
-        await self.session.merge(user)
+    async def update(self, user: User) -> UserModel:
+        existing = await self.get(user.id)
+        if existing is None:
+            raise ValueError(f"User {user.id} not found")
+
+        existing.username = user.username
+        existing.first_name = user.first_name
+        existing.last_name = user.last_name
+        existing.photo_url = user.photo_url
+        existing.is_admin = user.is_admin
+        existing.is_active = user.is_active
+        existing.updated_at = datetime.utcnow()
+
         await self.session.flush()
-        return user
+        return existing

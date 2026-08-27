@@ -1,6 +1,7 @@
-import pytest
 from decimal import Decimal
 from uuid import uuid4
+
+import pytest
 
 from app.domain.catalog.entities import Category, Product
 from app.domain.inventory.entities import InventoryUnit
@@ -8,8 +9,8 @@ from app.domain.locations.entities import City, Location
 from app.domain.orders.entities import Order, OrderItem, OrderStatus
 from app.domain.payments.entities import PaymentMethod
 from app.domain.settings.entities import Setting
-from app.domain.shared.exceptions import EntityNotFoundError, BusinessRuleViolation
-from app.domain.shared.value_objects import Money, Coordinates, TelegramUserId
+from app.domain.shared.exceptions import BusinessRuleViolation, EntityNotFoundError
+from app.domain.shared.value_objects import Coordinates, Money, TelegramUserId
 from app.domain.users.entities import User
 
 
@@ -169,11 +170,11 @@ class TestOrder:
 
 class TestOrderStatus:
     def test_status_values(self) -> None:
-        assert OrderStatus.CREATED == "created"
-        assert OrderStatus.PAID == "paid"
-        assert OrderStatus.PROCESSING == "processing"
-        assert OrderStatus.COMPLETED == "completed"
-        assert OrderStatus.CANCELLED == "cancelled"
+        assert OrderStatus.CREATED.value == "created"
+        assert OrderStatus.PAID.value == "paid"
+        assert OrderStatus.PROCESSING.value == "processing"
+        assert OrderStatus.COMPLETED.value == "completed"
+        assert OrderStatus.CANCELLED.value == "cancelled"
 
 
 class TestPaymentMethod:

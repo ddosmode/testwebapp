@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatPrice, isPositiveNumber } from '../utils'
+import { formatPrice, isPositiveNumber } from './utils'
 
 describe('formatPrice', () => {
   it('formats a number to 2 decimal places', () => {

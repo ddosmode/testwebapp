@@ -36,8 +36,9 @@ class TelegramAuthService:
     data from Telegram.
     """
 
-    def __init__(self, user_repository: UserRepository) -> None:
+    def __init__(self, user_repository: UserRepository, bot_token: str) -> None:
         self._user_repository = user_repository
+        self._bot_token = bot_token
 
     async def authenticate(self, init_data: str) -> User:
         """
@@ -57,7 +58,7 @@ class TelegramAuthService:
                 validation, but defensive check included).
         """
         try:
-            payload = verify_init_data(init_data)
+            payload = verify_init_data(init_data, self._bot_token)
         except ValidatorInitDataError as exc:
             raise TelegramInitDataError(str(exc)) from exc
 

@@ -1,7 +1,11 @@
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
 import pytest_asyncio
 
 from app.infrastructure.database import Base
-from app.infrastructure.database.session import engine, SessionFactory
+from app.infrastructure.database.session import SessionFactory, engine
 
 
 @pytest_asyncio.fixture(autouse=True)

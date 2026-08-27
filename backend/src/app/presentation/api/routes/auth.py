@@ -98,7 +98,7 @@ async def telegram_auth(request: TelegramAuthRequest) -> TelegramAuthResponse:
         )
 
     async with SqlAlchemyUnitOfWork(SessionFactory) as uow:
-        service = TelegramAuthService(uow.users)
+        service = TelegramAuthService(uow.users, settings.telegram_bot_token)
         try:
             user = await service.authenticate(request.init_data)
         except Exception as exc:

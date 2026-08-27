@@ -67,10 +67,10 @@ async def test_get_product_not_found() -> None:
 
 @pytest.mark.asyncio
 async def test_get_product_with_data() -> None:
-    from uuid import uuid4
     from decimal import Decimal
-    from app.infrastructure.database.session import SessionFactory
+
     from app.infrastructure.database.models import CategoryModel, ProductModel
+    from app.infrastructure.database.session import SessionFactory
 
     async with SessionFactory() as session:
         category = CategoryModel(name="Test Category", slug="test-category")

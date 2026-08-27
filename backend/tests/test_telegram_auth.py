@@ -13,19 +13,16 @@ Covers:
 9. POST /auth/telegram updates existing user on subsequent logins.
 """
 
-import hashlib
-import hmac
 import time
+from uuid import uuid4
 
 import pytest
 from httpx import ASGITransport, AsyncClient
 
-from app.presentation.api import create_app
-from app.infrastructure.database.session import SessionFactory
 from app.infrastructure.database.models import UserModel
-from app.infrastructure.telegram.validator import compute_data_check_string, compute_hmac_hash
-from app.config.settings import Settings
-from uuid import uuid4
+from app.infrastructure.database.session import SessionFactory
+from app.infrastructure.telegram.validator import compute_hmac_hash
+from app.presentation.api import create_app
 
 TEST_BOT_TOKEN = "123456789:ABCdefGhIJKlmNoPQRsTUVwxYZ1234567890"
 

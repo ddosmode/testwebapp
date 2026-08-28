@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { api } from '@/lib/api'
 
 export interface Product {
   id: string
@@ -13,12 +14,8 @@ export function ProductList() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch('/catalog/products')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch')
-        return res.json()
-      })
-      .then(setProducts)
+    api.get('/catalog/products')
+      .then((res) => setProducts(res.data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
   }, [])
